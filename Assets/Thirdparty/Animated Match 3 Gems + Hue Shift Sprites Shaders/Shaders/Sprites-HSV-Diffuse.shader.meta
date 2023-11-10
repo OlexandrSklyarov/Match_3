@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8831537781ac9e84ca78a250ea6ae429
+timeCreated: 1463225861
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62804
+  packageName: Animated Match 3 Gems + Hue Shift Sprites Shaders
+  packageVersion: 1.0
+  assetPath: Assets/Animated Match 3 Gems + Hue Shift Sprites Shaders/Shaders/Sprites-HSV-Diffuse.shader
+  uploadId: 117909
