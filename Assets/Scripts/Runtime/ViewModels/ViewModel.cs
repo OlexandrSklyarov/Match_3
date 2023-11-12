@@ -31,15 +31,15 @@ namespace AS.Runtime.ViewModels
             {
                 for (int y = 0; y < _size.y; y++)
                 {
-                    _model.SetCellType(x, y, GetRandomCellData());
+                    _model.SetCellType(x, y, GetRandomItemType());
                 }
             }
         }
 
-        private ItemType GetRandomCellData()
+        private ItemType GetRandomItemType()
         {            
             var max = Enum.GetNames(typeof(ItemType)).Length; 
-            return (ItemType)UnityEngine.Random.Range(1, max);
+            return (ItemType)UnityEngine.Random.Range(2, max);
         }
     }
 }
