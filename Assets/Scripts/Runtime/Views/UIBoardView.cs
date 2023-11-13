@@ -58,13 +58,13 @@ namespace AS.Runtime.Views
 
             if (type == ItemType.None || type == ItemType.Empty) return;
             
-            cell.PointerDownEvent += () => FirstSelectedItem(x, y);
-            cell.SelectEvent += () => SelectedItem(x, y);       
+            cell.PointerDownEvent += () => FirstSelectItem(x, y);
+            cell.SelectEvent += () => TrySelectSecondItem(x, y);       
         }
 
-        private void FirstSelectedItem(int x, int y) => FirstItem = new Vector2Int(x, y);       
+        private void FirstSelectItem(int x, int y) => FirstItem = new Vector2Int(x, y);       
 
-        private void SelectedItem(int x, int y)
+        private void TrySelectSecondItem(int x, int y)
         {
             if (!FirstItem.HasValue) return;
 
@@ -78,6 +78,10 @@ namespace AS.Runtime.Views
             if (TryGetImage(type, out var image))
             {
                 cell.SetImage(image);
+            }
+            else
+            {
+                cell.SetImage(_data.DefaultImage);
             }
         }
 
@@ -101,6 +105,8 @@ namespace AS.Runtime.Views
                 return true;
             }
 
+            Debug.LogWarning("image not found...");
+
             return false;
         }
 
@@ -117,8 +123,6 @@ namespace AS.Runtime.Views
 
         protected override void OnChangeItems(bool isChangeSuccess, Vector2Int first, Vector2Int second)
         {
-            OnResetSelectedItems();
-
             if (isChangeSuccess)
             {
                 Swap(GetItem(first), GetItem(second));
@@ -149,7 +153,12 @@ namespace AS.Runtime.Views
             if (!FirstItem.HasValue) return;
             if (!SecondItem.HasValue) return;
 
-            _viewModel.SelectItemPair(FirstItem.Value, SecondItem.Value);
+            var first = FirstItem.Value;
+            var second = SecondItem.Value;
+
+            OnResetSelectedItems();
+
+            _viewModel.SelectItemPair(first, second);
         }
     }
 }

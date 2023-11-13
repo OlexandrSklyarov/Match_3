@@ -26,3 +26,4 @@ MonoBehaviour:
       <Image>k__BackingField: {fileID: -1295788354, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
     - <Type>k__BackingField: 6
       <Image>k__BackingField: {fileID: -1204127516, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
+    <DefaultImage>k__BackingField: {fileID: 21300000, guid: c0a8c85521973d24cb3df2bb3cd3d052, type: 3}

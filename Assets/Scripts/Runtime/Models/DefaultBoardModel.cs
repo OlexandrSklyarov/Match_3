@@ -8,19 +8,14 @@ namespace AS.Runtime.Models
         {
         }
 
-        protected override bool IsCanSwap(ref Vector2Int first, ref Vector2Int second)
+        protected override bool IsCanSwap(Vector2Int first, Vector2Int second)
         {
-            return IsNeighbor(ref first, ref second) && IsCanMerge();
+            return IsNeighbor(first, second);
         }
 
-        private static bool IsNeighbor(ref Vector2Int first, ref Vector2Int second)
+        private static bool IsNeighbor(Vector2Int first, Vector2Int second)
         {
             return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y) == 1;
-        }
-
-        private bool IsCanMerge()
-        {
-            return true;
         }
     }
 }

@@ -29,17 +29,37 @@ namespace AS.Runtime.Models
 
         public void TryChangeItems(Vector2Int first, Vector2Int second)
         {
-            if (IsCanSwap(ref first, ref second))
+            if (IsCanSwap(first, second))
             {
                 Swap(first, second);
-                SwapItemsEvent(true, first, second);
+
+                if (IsStreak(first, second))
+                {
+                    SuccessSwap(first, second);
+                    Debug.Log("IsStreak!!!");
+                }
+                else
+                {
+                    Swap(second, first);
+                    FailureSwap(first, second);
+                }
             }
             else
             {
-                SwapItemsEvent(false, first, second);
+                FailureSwap(first, second);
             }
-        }       
-        
+        }
+
+        private bool IsStreak(Vector2Int first, Vector2Int second)
+        {
+            return _generator.IsStreak(first.x, first.y, _grid) ||
+                _generator.IsStreak(second.x, second.y, _grid);
+        }
+
+        private void SuccessSwap(Vector2Int first, Vector2Int second) => SwapItemsEvent(true, first, second);
+
+        private void FailureSwap(Vector2Int first, Vector2Int second) => SwapItemsEvent(false, first, second);
+
         private void Swap(Vector2Int first, Vector2Int second)
         {
             var temp = GetItem(first);
@@ -51,6 +71,6 @@ namespace AS.Runtime.Models
 
         private int SetItem(Vector2Int index, int value) => _grid[index.x, index.y] = value;
 
-        protected abstract bool IsCanSwap(ref Vector2Int first, ref Vector2Int second);
+        protected abstract bool IsCanSwap(Vector2Int first, Vector2Int second);
     }
 }

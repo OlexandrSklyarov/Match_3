@@ -17,11 +17,7 @@ namespace AS.Runtime.Data
     {
         [field: SerializeField] public CellViewContainer CellPrefab {get; private set;}
         [field: SerializeField] public CellViewItem[] Items {get; private set;}
-
-        internal object FirstOrDefault(Func<object, bool> value)
-        {
-            throw new NotImplementedException();
-        }
+        [field: SerializeField] public Sprite DefaultImage  {get; private set;}        
     }
 
     [Serializable]
