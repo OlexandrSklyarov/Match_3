@@ -3,7 +3,7 @@ namespace AS.Runtime.Models
 {
     public enum ItemType
     {
-        None,
+        None = 0,
         Empty,
         Item_1,
         Item_2,

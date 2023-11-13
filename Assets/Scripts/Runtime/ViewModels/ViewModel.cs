@@ -6,40 +6,32 @@ namespace AS.Runtime.ViewModels
 {
     public abstract class ViewModel
     {
-        public event Action<Cell[,]> ChangeGridViewEvent;
+        public event Action<int[,]> ChangeGridViewEvent;
+        public event Action ResetSelectedEvent;
+        public event Action<bool, Vector2Int, Vector2Int> TryChangeEvent;
 
         protected Model _model;
-        private Vector2Int _size;
 
-        public ViewModel(Model model, Vector2Int size)
+        public ViewModel(Model model)
         {
             _model = model;
             _model.ChangeGridEvent += OnChangeBoardModel;
-
-            _size = size;
-
+            _model.SwapItemsEvent += OnSwapItemsResult;
         }
 
-        private void OnChangeBoardModel(Cell[,] cells)
+        private void OnSwapItemsResult(bool success, Vector2Int first, Vector2Int second)
+        {
+            TryChangeEvent?.Invoke(success, first, second);
+        }
+
+        private void OnChangeBoardModel(int[,] cells)
         {
             ChangeGridViewEvent?.Invoke(cells);
-        }
-
-        public void GenerateBoard()
+        }       
+       
+        public void SelectItemPair(Vector2Int first, Vector2Int second)
         {
-            for (int x = 0; x < _size.x; x++)
-            {
-                for (int y = 0; y < _size.y; y++)
-                {
-                    _model.SetCellType(x, y, GetRandomItemType());
-                }
-            }
-        }
-
-        private ItemType GetRandomItemType()
-        {            
-            var max = Enum.GetNames(typeof(ItemType)).Length; 
-            return (ItemType)UnityEngine.Random.Range(2, max);
-        }
+            _model.TryChangeItems(first, second);            
+        }        
     }
 }

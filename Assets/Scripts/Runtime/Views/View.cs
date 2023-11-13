@@ -1,5 +1,4 @@
 using AS.Runtime.Data;
-using AS.Runtime.Models;
 using AS.Runtime.ViewModels;
 using UnityEngine;
 
@@ -7,26 +6,33 @@ namespace AS.Runtime.Views
 {
     public abstract class View : MonoBehaviour
     {
+        public Vector2Int? FirstItem;
+        public Vector2Int? SecondItem;
+
         protected RectTransform _rect;
         protected BoardViewModel _viewModel;
-        protected CellView _cellViewPrefab;
-        protected CellViewData[] _data;
-        protected CellView[,] _cellViews;
+        protected CellViewData _data;
 
         private void Awake() 
         {
-            _rect = GetComponent<RectTransform>();    
-        }
+            _rect = GetComponent<RectTransform>();             
+        }       
 
-        public void Init(BoardViewModel viewModel, CellView cellPrefab, CellViewData[] viewData)
+
+        public void Init(BoardViewModel viewModel, CellViewData viewData)
         {
             _viewModel = viewModel;
-            _cellViewPrefab = cellPrefab;
             _data = viewData;
             
             viewModel.ChangeGridViewEvent += OnUpdateBoard;
+            viewModel.ResetSelectedEvent += OnResetSelectedItems;
+            viewModel.TryChangeEvent += OnChangeItems;
         }
 
-        protected abstract void OnUpdateBoard(Cell[,] cells);
+        protected abstract void OnChangeItems(bool isChangeSuccess, Vector2Int first, Vector2Int second);
+
+        protected abstract void OnResetSelectedItems();
+
+        protected abstract void OnUpdateBoard(int[,] cells);  
     }
 }

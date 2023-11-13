@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: BoardConfig
   m_EditorClassIdentifier: 
   <Size>k__BackingField: {x: 8, y: 15}
-  <CellPrefab>k__BackingField: {fileID: 2679038298386015162, guid: b0bc7d07c02074a95b3c905d1897eeaa, type: 3}
-  <Views>k__BackingField:
-  - <Type>k__BackingField: 2
-    <Image>k__BackingField: {fileID: -104371370, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
-  - <Type>k__BackingField: 3
-    <Image>k__BackingField: {fileID: -501416656, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
-  - <Type>k__BackingField: 4
-    <Image>k__BackingField: {fileID: 1752448108, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
-  - <Type>k__BackingField: 5
-    <Image>k__BackingField: {fileID: -1295788354, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
-  - <Type>k__BackingField: 6
-    <Image>k__BackingField: {fileID: -1204127516, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
+  <ViewData>k__BackingField:
+    <CellPrefab>k__BackingField: {fileID: 2056595330815433257, guid: b0bc7d07c02074a95b3c905d1897eeaa, type: 3}
+    <Items>k__BackingField:
+    - <Type>k__BackingField: 2
+      <Image>k__BackingField: {fileID: -104371370, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
+    - <Type>k__BackingField: 3
+      <Image>k__BackingField: {fileID: -501416656, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
+    - <Type>k__BackingField: 4
+      <Image>k__BackingField: {fileID: 1752448108, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
+    - <Type>k__BackingField: 5
+      <Image>k__BackingField: {fileID: -1295788354, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}
+    - <Type>k__BackingField: 6
+      <Image>k__BackingField: {fileID: -1204127516, guid: cfe42e8c467dd211ebdb6962f55a4b35, type: 3}

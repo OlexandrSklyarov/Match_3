@@ -10,15 +10,18 @@ namespace AS.Runtime
     {
         [SerializeField] private GameConfig _config;
         [SerializeField] private View _view;
+        private BoardModel _model;
+        private BoardViewModel _viewModel;
 
         private void Start() 
         {
-            var model = new BoardModel(new Cell[_config.Board.Size.x, _config.Board.Size.y]);
-            var viewModel = new BoardViewModel(model, _config.Board.Size);
+            var generator = new ItemGenerator(_config.Board.Size);
+            _model = new BoardModel(generator);
+            _viewModel = new BoardViewModel(_model);
 
-            _view.Init(viewModel, _config.Board.CellPrefab, _config.Board.Views);  
+            _view.Init(_viewModel, _config.Board.ViewData);  
 
-            viewModel.GenerateBoard();
+            _model.ForceChangeData();
         }
-    }
+     }
 }
