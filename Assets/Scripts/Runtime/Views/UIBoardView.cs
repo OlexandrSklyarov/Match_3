@@ -59,13 +59,19 @@ namespace AS.Runtime.Views
             if (type == ItemType.None || type == ItemType.Empty) return;
             
             cell.PointerDownEvent += () => FirstSelectedItem(x, y);
-            cell.SelectEvent += () => SelectedItem(x, y);
-            cell.PointerUpEvent += () => TrySelectPairItems();        
+            cell.SelectEvent += () => SelectedItem(x, y);       
         }
 
         private void FirstSelectedItem(int x, int y) => FirstItem = new Vector2Int(x, y);       
 
-        private void SelectedItem(int x, int y) => SecondItem = new Vector2Int(x, y); 
+        private void SelectedItem(int x, int y)
+        {
+            if (!FirstItem.HasValue) return;
+
+            SecondItem = new Vector2Int(x, y); 
+
+            TrySelectPairItems();
+        }
 
         private void SetImage(ItemType type, CellViewContainer cell)
         {
@@ -101,10 +107,7 @@ namespace AS.Runtime.Views
         protected override void OnResetSelectedItems()
         {            
             if (!FirstItem.HasValue) return;
-            if (!SecondItem.HasValue) return;
-            
-            GetItem(FirstItem.Value).ResetState();
-            GetItem(SecondItem.Value).ResetState();
+            if (!SecondItem.HasValue) return;            
 
             FirstItem = null;
             SecondItem = null;
