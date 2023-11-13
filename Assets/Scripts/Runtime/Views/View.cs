@@ -6,11 +6,11 @@ namespace AS.Runtime.Views
 {
     public abstract class View : MonoBehaviour
     {
-        public Vector2Int? FirstItem;
-        public Vector2Int? SecondItem;
-
+        protected Vector2Int? FirstItem;
+        protected Vector2Int? SecondItem;
+        
         protected RectTransform _rect;
-        protected BoardViewModel _viewModel;
+        protected ViewModel _viewModel;
         protected CellViewData _data;
 
         private void Awake() 
@@ -18,14 +18,12 @@ namespace AS.Runtime.Views
             _rect = GetComponent<RectTransform>();             
         }       
 
-
-        public void Init(BoardViewModel viewModel, CellViewData viewData)
+        public void Init(ViewModel viewModel, CellViewData viewData)
         {
             _viewModel = viewModel;
             _data = viewData;
             
             viewModel.ChangeGridViewEvent += OnUpdateBoard;
-            viewModel.ResetSelectedEvent += OnResetSelectedItems;
             viewModel.TryChangeEvent += OnChangeItems;
         }
 

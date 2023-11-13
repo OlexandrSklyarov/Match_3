@@ -7,7 +7,6 @@ namespace AS.Runtime.ViewModels
     public abstract class ViewModel
     {
         public event Action<int[,]> ChangeGridViewEvent;
-        public event Action ResetSelectedEvent;
         public event Action<bool, Vector2Int, Vector2Int> TryChangeEvent;
 
         protected Model _model;

@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace AS.Runtime.Models
 {
-    public class BoardModel : Model
+    public class DefaultBoardModel : Model
     {
-        public BoardModel(ItemGenerator generator) : base(generator)
+        public DefaultBoardModel(ItemGenerator generator) : base(generator)
         {
         }
 

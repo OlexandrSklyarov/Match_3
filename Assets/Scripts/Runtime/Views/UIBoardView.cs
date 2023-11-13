@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace AS.Runtime.Views
 {
-    public class BoardView : View
-    {
-        protected CellViewContainer[,] _cellViews;
+    public class UIBoardView : View
+    {        
+        private CellViewContainer[,] _cellViews;
 
         protected override void OnUpdateBoard(int[,] cells)
         {
