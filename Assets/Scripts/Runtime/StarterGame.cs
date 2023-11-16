@@ -16,11 +16,11 @@ namespace AS.Runtime
 
         private void Start() 
         {
-            var generator = new ItemGenerator(_config.Board.Size);
-            _model = new DefaultBoardModel(generator);
+            var gridTool = new ItemGridTool(_config.Board.Size, _config.Board.AnimationData);
+            _model = new DefaultBoardModel(gridTool);
             _viewModel = new DefaultBoardViewModel(_model);
 
-            _view.Init(_viewModel, _config.Board.ViewData);  
+            _view.Init(_viewModel, _config.Board.ViewData, _config.Board.AnimationData);  
 
             _model.ForceChangeData();
         }

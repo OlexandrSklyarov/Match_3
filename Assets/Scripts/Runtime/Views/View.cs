@@ -1,3 +1,4 @@
+using System;
 using AS.Runtime.Data;
 using AS.Runtime.ViewModels;
 using UnityEngine;
@@ -12,20 +13,25 @@ namespace AS.Runtime.Views
         protected RectTransform _rect;
         protected ViewModel _viewModel;
         protected CellViewData _data;
+        protected AnimationData _animationData;
 
         private void Awake() 
         {
             _rect = GetComponent<RectTransform>();             
         }       
 
-        public void Init(ViewModel viewModel, CellViewData viewData)
+        public void Init(ViewModel viewModel, CellViewData viewData, AnimationData animationData)
         {
             _viewModel = viewModel;
             _data = viewData;
+            _animationData = animationData;
             
             viewModel.ChangeGridViewEvent += OnUpdateBoard;
             viewModel.TryChangeEvent += OnChangeItems;
+            viewModel.MoveItemEvent += OnMoveItem;
         }
+
+        protected abstract void OnMoveItem(Vector2Int oldPos, Vector2Int newPos);
 
         protected abstract void OnChangeItems(bool isChangeSuccess, Vector2Int first, Vector2Int second);
 

@@ -27,6 +27,8 @@ namespace AS.Runtime.Views
                     SetImage((ItemType)cells[x, y], _cellViews[x, y]);
                 }
             }
+
+            Debug.Log("[UpdateImage completed!!!]");
         }
 
         private void GenerateViews(int[,] cells)
@@ -75,14 +77,15 @@ namespace AS.Runtime.Views
 
         private void SetImage(ItemType type, CellViewContainer cell)
         {
-            if (TryGetImage(type, out var image))
+            var item = _data.Items.FirstOrDefault(x => x.Type == type);
+
+            if (item != null)
             {
-                cell.SetImage(image);
+                cell.SetImage(item.Image);
+                return;
             }
-            else
-            {
-                cell.SetImage(_data.DefaultImage);
-            }
+
+            cell.SetImageWithShake(_data.DefaultImage, _animationData.ShakeDuration);
         }
 
         private Vector2 GetCellPosition(int x, int y, float cellSize)
@@ -92,22 +95,6 @@ namespace AS.Runtime.Views
                 cellSize * 0.5f + cellSize * x,
                 -cellSize * 0.5f - cellSize * y
             );
-        }
-
-        private bool TryGetImage(ItemType type, out Sprite image) 
-        {
-            image = null;
-            var item = _data.Items.FirstOrDefault(x => x.Type == type);
-
-            if (item != null)
-            {
-                image = item.Image;
-                return true;
-            }
-
-            Debug.LogWarning("image not found...");
-
-            return false;
         }
 
         protected override void OnResetSelectedItems()
@@ -125,27 +112,27 @@ namespace AS.Runtime.Views
         {
             if (isChangeSuccess)
             {
-                Swap(GetItem(first), GetItem(second));
+                Swap(GetItem(first), GetItem(second), _animationData.DefaultSwapDuration);
             }
             else
             {
-                FakeSwap(GetItem(first), GetItem(second));
+                FakeSwap(GetItem(first), GetItem(second), _animationData.DefaultSwapDuration);
             }
         }
 
-        private void Swap(CellViewContainer first, CellViewContainer second)
+        private void Swap(CellViewContainer first, CellViewContainer second, float duration)
         {
             var f = first.MyView; 
             var s = second.MyView;    
 
-            second.SetView(f);
-            first.SetView(s);  
+            second.SetView(f, duration);
+            first.SetView(s, duration);  
         }
 
-        private void FakeSwap(CellViewContainer first, CellViewContainer second)
+        private void FakeSwap(CellViewContainer first, CellViewContainer second, float duration)
         {
-            first.ViewMoveAndReturn(second.MyView.MyPosition);
-            second.ViewMoveAndReturn(first.MyView.MyPosition);
+            first.ViewMoveAndReturn(second.MyView.MyPosition, duration);
+            second.ViewMoveAndReturn(first.MyView.MyPosition, duration);
         }
 
         private void TrySelectPairItems()
@@ -159,6 +146,11 @@ namespace AS.Runtime.Views
             OnResetSelectedItems();
 
             _viewModel.SelectItemPair(first, second);
+        }
+
+        protected override void OnMoveItem(Vector2Int oldPos, Vector2Int newPos)
+        {
+            Swap(GetItem(oldPos), GetItem(newPos), _animationData.FastSwapDuration);
         }
     }
 }

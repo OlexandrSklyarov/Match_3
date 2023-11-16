@@ -1,20 +1,26 @@
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 namespace AS.Runtime.Models
 {
     public abstract class Model
     {
-        protected ItemGenerator _generator;
+        protected ItemGridTool _gridTool;
         protected int[,] _grid;
+        protected Dictionary<int, int> _itemPoints = new();
+        protected bool _isBlockInput;
 
         public event Action<int[,]> ChangeGridEvent;
         public event Action<bool, Vector2Int, Vector2Int> SwapItemsEvent;
+        public event Action<Vector2Int, Vector2Int> MoveItemEvent;
 
-        public Model(ItemGenerator generator)
+        public Model(ItemGridTool gridTool)
         {
-            _generator = generator;
-            _grid = generator.GenerateRandomGrid();
+            _gridTool = gridTool;
+            _grid = _gridTool.GenerateRandomGrid();
         }
 
         public void SetCellType(Vector2Int index, int value)
@@ -29,14 +35,17 @@ namespace AS.Runtime.Models
 
         public void TryChangeItems(Vector2Int first, Vector2Int second)
         {
+            if (_isBlockInput) return;
+
             if (IsCanSwap(first, second))
             {
-                Swap(first, second);
+                Swap(first, second);                
 
-                if (IsStreak(first, second))
-                {
+                if (TryAnalyze())
+                {     
                     SuccessSwap(first, second);
-                    Debug.Log("IsStreak!!!");
+
+                    MoveGridAsync();
                 }
                 else
                 {
@@ -50,11 +59,87 @@ namespace AS.Runtime.Models
             }
         }
 
-        private bool IsStreak(Vector2Int first, Vector2Int second)
+        private async void MoveGridAsync()
         {
-            return _generator.IsStreak(first.x, first.y, _grid) ||
-                _generator.IsStreak(second.x, second.y, _grid);
+            Debug.Log("Destroy items...");
+
+            _isBlockInput = true;
+            var time = TimeSpan.FromSeconds(0.5f);
+
+            await UniTask.Delay(time);
+           
+            ForceChangeData();
+
+            await Task.Delay(1000);
+
+            //fall items
+            await _gridTool.TryGridMoveDownAsync(_grid, OnMoveItem);
+            ForceChangeData();
+
+            await UniTask.Delay(time);
+
+            //replace items
+            _gridTool.ReplaceGrid(_grid);
+            ForceChangeData();
+
+            await UniTask.Delay(time);            
+
+            //analyze
+            if (TryAnalyze())
+            {                
+                MoveGridAsync();
+                return;
+            }
+
+            _isBlockInput = false;
         }
+
+        private void OnMoveItem(Vector2Int oldPos, Vector2Int newPos) => MoveItemEvent?.Invoke(oldPos, newPos);
+
+        private bool TryAnalyze()
+        {
+            _itemPoints.Clear();
+            return _gridTool.AnalyzeGrid(_grid, OnAddPoints, CalculateFinalPoints);
+        }
+
+        private void CalculateFinalPoints(int groupCount)
+        {
+            var total = 0;
+
+            foreach(var item in _itemPoints)
+            {
+                total += GetCoast(item.Key) * item.Value * groupCount;
+            }
+
+            Debug.Log($"Total points: {total}");
+        }
+
+        private int GetCoast(int key)
+        {
+            return ((ItemType)key) switch
+            {
+                ItemType.Item_1 => 2,
+                ItemType.Item_2 => 4,
+                ItemType.Item_3 => 5,
+                ItemType.Item_4 => 3,
+                ItemType.Item_5 => 1,
+                _=> 0
+            };
+        }
+
+        private void OnAddPoints(int type, int groupLength)
+        {
+            Debug.Log($"type {(ItemType)type} length {groupLength}");
+
+            if (_itemPoints.ContainsKey(type))
+            {
+                _itemPoints[type] += groupLength;
+            } 
+            else
+            {
+                _itemPoints.Add(type, groupLength);
+            }
+        }        
 
         private void SuccessSwap(Vector2Int first, Vector2Int second) => SwapItemsEvent(true, first, second);
 
@@ -71,6 +156,6 @@ namespace AS.Runtime.Models
 
         private int SetItem(Vector2Int index, int value) => _grid[index.x, index.y] = value;
 
-        protected abstract bool IsCanSwap(Vector2Int first, Vector2Int second);
+        protected abstract bool IsCanSwap(Vector2Int first, Vector2Int second);        
     }
 }

@@ -8,6 +8,7 @@ namespace AS.Runtime.ViewModels
     {
         public event Action<int[,]> ChangeGridViewEvent;
         public event Action<bool, Vector2Int, Vector2Int> TryChangeEvent;
+        public event Action<Vector2Int, Vector2Int> MoveItemEvent;
 
         protected Model _model;
 
@@ -16,6 +17,12 @@ namespace AS.Runtime.ViewModels
             _model = model;
             _model.ChangeGridEvent += OnChangeBoardModel;
             _model.SwapItemsEvent += OnSwapItemsResult;
+            _model.MoveItemEvent += OnMoveItem;
+        }
+
+        private void OnMoveItem(Vector2Int oldPos, Vector2Int newPos)
+        {
+            MoveItemEvent?.Invoke(oldPos, newPos);
         }
 
         private void OnSwapItemsResult(bool success, Vector2Int first, Vector2Int second)

@@ -11,8 +11,7 @@ namespace AS.Runtime.Views
         public CellView MyView => _view;
 
         [SerializeField] private Image _imageBackground;
-        [SerializeField] private CellView _view;
-        [SerializeField, Min(0.01f)] private float _moveSpeed = 0.15f;
+        [SerializeField] private CellView _view;        
 
         private RectTransform _rect;
 
@@ -43,18 +42,26 @@ namespace AS.Runtime.Views
             SelectEvent?.Invoke();            
         }                 
 
-        public void SetView(CellView newView)
+        public void SetView(CellView newView, float duration)
         {
             _view = newView;
             _view.transform.SetParent(transform);
-            _view.transform.DOLocalMove(Vector2.zero, _moveSpeed);
+            _view.transform.DOLocalMove(Vector2.zero, duration);
         }
 
-        public void ViewMoveAndReturn(Vector2 tempPosition)
+        public void ViewMoveAndReturn(Vector2 tempPosition, float duration)
         {
             _view.transform
-                .DOMove(tempPosition, _moveSpeed)
-                .OnComplete(() => _view.transform.DOLocalMove(Vector2.zero, _moveSpeed).SetEase(Ease.InOutSine));
-        }        
+                .DOMove(tempPosition, duration)
+                .OnComplete(() => _view.transform.DOLocalMove(Vector2.zero, duration).SetEase(Ease.InOutSine));
+        }
+
+        public void SetImageWithShake(Sprite sprite, float shakeDuration)
+        {
+            _view.transform
+                .DOShakePosition(shakeDuration, 5f)
+                .OnComplete(() => _view.SetImage(sprite));
+            
+        }
     }
 }
