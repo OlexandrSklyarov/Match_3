@@ -1,11 +1,14 @@
 using System.Linq;
 using AS.Runtime.Models;
+using TMPro;
 using UnityEngine;
 
 namespace AS.Runtime.Views
 {
     public class UIBoardView : View
     {        
+        [SerializeField] private TextMeshProUGUI _pointsCounter;
+
         private CellViewContainer[,] _cellViews;
 
         protected override void OnUpdateBoard(int[,] cells)
@@ -27,8 +30,6 @@ namespace AS.Runtime.Views
                     SetImage((ItemType)cells[x, y], _cellViews[x, y]);
                 }
             }
-
-            Debug.Log("[UpdateImage completed!!!]");
         }
 
         private void GenerateViews(int[,] cells)
@@ -151,6 +152,11 @@ namespace AS.Runtime.Views
         protected override void OnMoveItem(Vector2Int oldPos, Vector2Int newPos)
         {
             Swap(GetItem(oldPos), GetItem(newPos), _animationData.FastSwapDuration);
+        }
+
+        protected override void OnUpdateTotalPoints(int totalPoints)
+        {
+            _pointsCounter.text = $"SCORE: {totalPoints}";
         }
     }
 }

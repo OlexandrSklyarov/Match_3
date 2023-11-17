@@ -10,28 +10,30 @@ namespace AS.Runtime.Models
     {
         protected ItemGridTool _gridTool;
         protected int[,] _grid;
-        protected Dictionary<int, int> _itemPoints = new();
+        protected Dictionary<int, int> _tempItemPoints = new();
         protected bool _isBlockInput;
+        protected int _totalPoints;
 
         public event Action<int[,]> ChangeGridEvent;
         public event Action<bool, Vector2Int, Vector2Int> SwapItemsEvent;
         public event Action<Vector2Int, Vector2Int> MoveItemEvent;
+        public event Action<int> UpdateTotalPointsEvent;
 
         public Model(ItemGridTool gridTool)
         {
             _gridTool = gridTool;
             _grid = _gridTool.GenerateRandomGrid();
-        }
+        }    
 
-        public void SetCellType(Vector2Int index, int value)
+        public void RefreshGridData()
         {
-            SetItem(index, value);
             ForceChangeData();
-        }
+            SendTotalPoints();
+        }   
 
         public int[,] GetGrid() => _grid;
 
-        public void ForceChangeData() => ChangeGridEvent?.Invoke(_grid);
+        protected void ForceChangeData() => ChangeGridEvent?.Invoke(_grid);
 
         public void TryChangeItems(Vector2Int first, Vector2Int second)
         {
@@ -61,8 +63,6 @@ namespace AS.Runtime.Models
 
         private async void MoveGridAsync()
         {
-            Debug.Log("Destroy items...");
-
             _isBlockInput = true;
             var time = TimeSpan.FromSeconds(0.5f);
 
@@ -98,21 +98,24 @@ namespace AS.Runtime.Models
 
         private bool TryAnalyze()
         {
-            _itemPoints.Clear();
+            _tempItemPoints.Clear();
             return _gridTool.AnalyzeGrid(_grid, OnAddPoints, CalculateFinalPoints);
         }
 
         private void CalculateFinalPoints(int groupCount)
         {
-            var total = 0;
+            var points = 0;
 
-            foreach(var item in _itemPoints)
+            foreach(var item in _tempItemPoints)
             {
-                total += GetCoast(item.Key) * item.Value * groupCount;
+                points += GetCoast(item.Key) * item.Value * groupCount;
             }
 
-            Debug.Log($"Total points: {total}");
+            _totalPoints += points;
+            SendTotalPoints();
         }
+
+        private void SendTotalPoints() => UpdateTotalPointsEvent?.Invoke(_totalPoints);
 
         private int GetCoast(int key)
         {
@@ -129,15 +132,13 @@ namespace AS.Runtime.Models
 
         private void OnAddPoints(int type, int groupLength)
         {
-            Debug.Log($"type {(ItemType)type} length {groupLength}");
-
-            if (_itemPoints.ContainsKey(type))
+            if (_tempItemPoints.ContainsKey(type))
             {
-                _itemPoints[type] += groupLength;
+                _tempItemPoints[type] += groupLength;
             } 
             else
             {
-                _itemPoints.Add(type, groupLength);
+                _tempItemPoints.Add(type, groupLength);
             }
         }        
 

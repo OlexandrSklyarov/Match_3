@@ -124,11 +124,11 @@ namespace AS.Runtime.Models
                         if(nchBlock > 2)
                         {
                             addPoint?.Invoke(chBlock, nchBlock); //save type
-                            groupCount++;
+                            ++groupCount;
 
-                            for (int l = 0; l < nchBlock; l++)
+                            for (int ln = 0; ln < nchBlock; ln++)
                             {
-                                grid[x - nchBlock + l, y] = -1 * Mathf.Abs(grid[x - nchBlock + l, y]);
+                                grid[x - nchBlock + ln, y] = -1 * Mathf.Abs(grid[x - nchBlock + ln, y]);
                             }
                         }
 
@@ -139,11 +139,11 @@ namespace AS.Runtime.Models
                     if (x == grid.GetLength(0)-1 && nchBlock > 2)
                     {
                         addPoint?.Invoke(chBlock, nchBlock); //save type
-                        groupCount++;
+                        ++groupCount;
 
-                        for (int l = 0; l < nchBlock; l++)
+                        for (int ln = 0; ln < nchBlock; ln++)
                         {
-                            grid[x - nchBlock + l, y] = -1 * Mathf.Abs(grid[x - nchBlock + l, y]);
+                            grid[x - nchBlock + ln + 1, y] = -1 * Mathf.Abs(grid[x - nchBlock + ln + 1, y]);
                         }
                     }
                 }
@@ -167,11 +167,11 @@ namespace AS.Runtime.Models
                         if(nchBlock > 2)
                         {
                             addPoint?.Invoke(chBlock, nchBlock); //save type
-                            groupCount++;
+                            ++groupCount;
 
-                            for (int l = 0; l < nchBlock; l++)
+                            for (int ln = 0; ln < nchBlock; ln++)
                             {
-                                grid[x, y - nchBlock + l] = -1 * Mathf.Abs(grid[x, y - nchBlock + l]);
+                                grid[x, y - nchBlock + ln] = -1 * Mathf.Abs(grid[x, y - nchBlock + ln]);
                             }
                         }
 
@@ -182,11 +182,11 @@ namespace AS.Runtime.Models
                     if (y == grid.GetLength(1)-1 && nchBlock > 2)
                     {
                         addPoint?.Invoke(chBlock, nchBlock); //save type
-                        groupCount++;
+                        ++groupCount;
 
-                        for (int l = 0; l < nchBlock; l++)
+                        for (int ln = 0; ln < nchBlock; ln++)
                         {
-                            grid[x, y - nchBlock + l] = -1 * Mathf.Abs(grid[x, y - nchBlock + l]);
+                            grid[x, y - nchBlock + ln + 1] = -1 * Mathf.Abs(grid[x, y - nchBlock + ln + 1]);
                         }
                     }
                 }

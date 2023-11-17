@@ -29,7 +29,10 @@ namespace AS.Runtime.Views
             viewModel.ChangeGridViewEvent += OnUpdateBoard;
             viewModel.TryChangeEvent += OnChangeItems;
             viewModel.MoveItemEvent += OnMoveItem;
+            viewModel.UpdateTotalPoints += OnUpdateTotalPoints;
         }
+
+        protected abstract void OnUpdateTotalPoints(int totalPoints);
 
         protected abstract void OnMoveItem(Vector2Int oldPos, Vector2Int newPos);
 
