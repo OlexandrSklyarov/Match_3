@@ -22,7 +22,7 @@ namespace AS.Runtime
 
             _view.Init(_viewModel, _config.Board.ViewData, _config.Board.AnimationData);  
 
-            _model.RefreshGridData();
+            _model.SendUpdateGridData();
         }
      }
 }

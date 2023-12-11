@@ -8,62 +8,72 @@ namespace AS.Runtime.Models
 {
     public class BoardModel
     {
+        private enum State {WaitInput, Working}
+
         protected ItemGridTool _gridTool;
         protected int[,] _grid;
         protected Dictionary<int, int> _tempItemPoints = new();
         protected bool _isBlockInput;
         protected int _totalPoints;
+        private State _currentState;
 
         public event Action<int[,]> ChangeGridEvent;
         public event Action<bool, Vector2Int, Vector2Int> SwapItemsEvent;
         public event Action<Vector2Int, Vector2Int> MoveItemEvent;
         public event Action<int> UpdateTotalPointsEvent;
+        public event Action<string> ChangeBoardStateEvent;
 
         public BoardModel(ItemGridTool gridTool)
         {
             _gridTool = gridTool;
-            _grid = _gridTool.GenerateRandomGrid();
+            _grid = _gridTool.GenerateRandomGrid();            
         }    
 
-        public void RefreshGridData()
+        public void SendUpdateGridData()
         {
             ForceChangeData();
             SendTotalPoints();
+            SetState(State.WaitInput);
         }   
-
-        public int[,] GetGrid() => _grid;
 
         protected void ForceChangeData() => ChangeGridEvent?.Invoke(_grid);
 
         public void TryChangeItems(Vector2Int first, Vector2Int second)
         {
-            if (_isBlockInput) return;
-
-            if (IsCanSwap(first, second))
+            switch(_currentState)
             {
-                Swap(first, second);                
-
-                if (TryAnalyze())
-                {     
-                    SuccessSwap(first, second);
-
-                    MoveGridAsync();
-                }
-                else
+                case State.Working: break;
+                case State.WaitInput:
                 {
-                    Swap(second, first);
-                    FailureSwap(first, second);
+                    if (IsCanSwap(first, second))
+                    {
+                        Swap(first, second);                
+
+                        if (TryAnalyze())
+                        {     
+                            SuccessSwap(first, second);
+
+                            MoveGridAsync();
+                        }
+                        else
+                        {
+                            Swap(second, first);
+                            FailureSwap(first, second);
+                        }
+                    }
+                    else
+                    {
+                        FailureSwap(first, second);
+                    }
                 }
-            }
-            else
-            {
-                FailureSwap(first, second);
-            }
+                    break;
+            }            
         }
 
         private async void MoveGridAsync()
         {
-            _isBlockInput = true;
+            SetState(State.Working);
+            
             var time = TimeSpan.FromSeconds(0.5f);
 
             await UniTask.Delay(time);
@@ -91,7 +101,13 @@ namespace AS.Runtime.Models
                 return;
             }
 
-            _isBlockInput = false;
+            SetState(State.WaitInput);
+        }
+
+        private void SetState(State state) 
+        {
+            _currentState = state;
+            ChangeBoardStateEvent?.Invoke(_currentState.ToString());
         }
 
         private void OnMoveItem(Vector2Int oldPos, Vector2Int newPos) => MoveItemEvent?.Invoke(oldPos, newPos);

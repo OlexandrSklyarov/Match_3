@@ -1,3 +1,4 @@
+using System;
 using AS.Runtime.Data;
 using AS.Runtime.ViewModels;
 using UnityEngine;
@@ -29,7 +30,10 @@ namespace AS.Runtime.Views
             viewModel.TryChangeEvent += OnChangeItems;
             viewModel.MoveItemEvent += OnMoveItem;
             viewModel.UpdateTotalPoints += OnUpdateTotalPoints;
+            viewModel.BoardChangeStateEvent += OnBoardChangeState;
         }
+
+        protected abstract void OnBoardChangeState(string state);
 
         protected abstract void OnUpdateTotalPoints(int totalPoints);
 

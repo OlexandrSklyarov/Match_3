@@ -10,6 +10,7 @@ namespace AS.Runtime.ViewModels
         public event Action<bool, Vector2Int, Vector2Int> TryChangeEvent;
         public event Action<Vector2Int, Vector2Int> MoveItemEvent;
         public event Action<int> UpdateTotalPoints;
+        public event Action<string> BoardChangeStateEvent;
 
         protected BoardModel _model;
 
@@ -20,8 +21,14 @@ namespace AS.Runtime.ViewModels
             _model.SwapItemsEvent += OnSwapItemsResult;
             _model.MoveItemEvent += OnMoveItem;
             _model.UpdateTotalPointsEvent += OnUpdateTotalPoints;
+            _model.ChangeBoardStateEvent += OnBoardChangeState;
         }
 
+        private void OnBoardChangeState(string state)
+        {
+            BoardChangeStateEvent?.Invoke(state);
+        } 
+        
         private void OnUpdateTotalPoints(int totalPoints)
         {
             UpdateTotalPoints?.Invoke(totalPoints);

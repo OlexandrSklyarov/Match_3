@@ -8,6 +8,7 @@ namespace AS.Runtime.Views
     public class UIBoardView : View
     {        
         [SerializeField] private TextMeshProUGUI _pointsCounter;
+        [SerializeField] private TextMeshProUGUI _boardStateInfo;
 
         private CellViewContainer[,] _cellViews;
 
@@ -157,6 +158,11 @@ namespace AS.Runtime.Views
         protected override void OnUpdateTotalPoints(int totalPoints)
         {
             _pointsCounter.text = $"SCORE: {totalPoints}";
+        }
+
+        protected override void OnBoardChangeState(string state)
+        {
+            _boardStateInfo.text = $"State: {state}";
         }
     }
 }
