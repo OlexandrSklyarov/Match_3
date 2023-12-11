@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 
 namespace AS.Runtime.Models
 {
-    public abstract class Model
+    public class BoardModel
     {
         protected ItemGridTool _gridTool;
         protected int[,] _grid;
@@ -19,7 +19,7 @@ namespace AS.Runtime.Models
         public event Action<Vector2Int, Vector2Int> MoveItemEvent;
         public event Action<int> UpdateTotalPointsEvent;
 
-        public Model(ItemGridTool gridTool)
+        public BoardModel(ItemGridTool gridTool)
         {
             _gridTool = gridTool;
             _grid = _gridTool.GenerateRandomGrid();
@@ -156,7 +156,15 @@ namespace AS.Runtime.Models
         public int GetItem(Vector2Int index) => _grid[index.x, index.y];
 
         private int SetItem(Vector2Int index, int value) => _grid[index.x, index.y] = value;
+ 
+        protected virtual bool IsCanSwap(Vector2Int first, Vector2Int second)
+        {
+            return IsNeighbor(first, second);
+        }
 
-        protected abstract bool IsCanSwap(Vector2Int first, Vector2Int second);        
+        protected bool IsNeighbor(Vector2Int first, Vector2Int second)
+        {
+            return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y) == 1;
+        }   
     }
 }

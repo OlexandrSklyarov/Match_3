@@ -1,4 +1,3 @@
-using System;
 using AS.Runtime.Data;
 using AS.Runtime.ViewModels;
 using UnityEngine;
@@ -11,7 +10,7 @@ namespace AS.Runtime.Views
         protected Vector2Int? SecondItem;
         
         protected RectTransform _rect;
-        protected ViewModel _viewModel;
+        protected BoardViewModel _viewModel;
         protected CellViewData _data;
         protected AnimationData _animationData;
 
@@ -20,7 +19,7 @@ namespace AS.Runtime.Views
             _rect = GetComponent<RectTransform>();             
         }       
 
-        public void Init(ViewModel viewModel, CellViewData viewData, AnimationData animationData)
+        public void Init(BoardViewModel viewModel, CellViewData viewData, AnimationData animationData)
         {
             _viewModel = viewModel;
             _data = viewData;

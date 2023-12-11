@@ -4,16 +4,16 @@ using UnityEngine;
 
 namespace AS.Runtime.ViewModels
 {
-    public abstract class ViewModel
+    public class BoardViewModel
     {
         public event Action<int[,]> ChangeGridViewEvent;
         public event Action<bool, Vector2Int, Vector2Int> TryChangeEvent;
         public event Action<Vector2Int, Vector2Int> MoveItemEvent;
         public event Action<int> UpdateTotalPoints;
 
-        protected Model _model;
+        protected BoardModel _model;
 
-        public ViewModel(Model model)
+        public BoardViewModel(BoardModel model)
         {
             _model = model;
             _model.ChangeGridEvent += OnChangeBoardModel;
